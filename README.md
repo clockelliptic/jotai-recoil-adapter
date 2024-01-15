@@ -1,3 +1,7 @@
+# jotai-recoil-adapter
+
+`jotai-recoil-adapter` is a library designed to facilitate the transition from Recoil to Jotai in React applications. It provides a drop-in Recoil-compatible API built on top of Jotai's state management capabilities.
+
 <!-- TOC -->
 
 - [jotai-recoil-adapter](#jotai-recoil-adapter)
@@ -26,10 +30,6 @@
   - [License](#license)
 
 <!-- /TOC -->
-
-# jotai-recoil-adapter
-
-`jotai-recoil-adapter` is a library designed to facilitate the transition from Recoil to Jotai in React applications. It provides a drop-in Recoil-compatible API built on top of Jotai's state management capabilities.
 
 ## Quick Start
 
