@@ -1,6 +1,6 @@
 {
   "name": "jotai-recoil-adapter",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Drop-in adapter for migrating to Jotai from Recoil",
   "license": "ISC",
   "main": "dist/index.cjs.js",
