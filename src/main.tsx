@@ -1,3 +1,4 @@
+import { atomFamily } from "./core/atom-family";
 import { atom } from "./core/atom";
 import { selector } from "./core/selector";
 import { useRecoilState } from "./hooks/use-recoil-state";
@@ -25,6 +26,11 @@ const numTodosState = selector({
     const todos = get(todosState);
     return todos.filter((todo) => !todo.completed).length;
   },
+});
+
+const fooStateFam = atomFamily<string, string>({
+  key: "foo-state-fam",
+  default: (param) => param,
 });
 
 const NewTodo: React.FC = () => {
@@ -88,12 +94,15 @@ export const TodoList: React.FC = () => {
 };
 
 const App = () => {
+  const fam1 = useRecoilValue(fooStateFam("foo-1"));
+  const fam2 = useRecoilValue(fooStateFam("foo-2"));
   return (
     <Suspense>
       <div className="App">
         <NewTodo />
         <TodoList />
         <NumTodos />
+        {fam1}.{fam2}
       </div>
     </Suspense>
   );

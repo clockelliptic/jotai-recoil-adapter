@@ -1,22 +1,20 @@
 import { atom } from "jotai";
 import { atomFamily as jotaiAtomFamily } from "jotai/utils";
 
+type GetDefaultValue<T, Param> = (param: Param) => T;
+
 export type AtomFamilyParams<T, Param> = {
-  key: (param: Param) => string;
-  default: T | ((param: Param) => T);
+  key: string;
+  default: T | GetDefaultValue<T, Param>;
 };
 
-export function atomFamily<T extends unknown[], Param>(
-  params: AtomFamilyParams<T, Param>,
-) {
-  return jotaiAtomFamily((param: Param) => {
+export function atomFamily<T, Param>(params: AtomFamilyParams<T, Param>) {
+  const stateFam = jotaiAtomFamily((param: Param) => {
     const defaultValue =
       typeof params.default === "function"
-        ? params.default(param)
+        ? (params.default as GetDefaultValue<T, Param>)(param)
         : params.default;
-    return atom({
-      key: params.key(param),
-      default: defaultValue,
-    });
+    return atom(defaultValue);
   });
+  return stateFam;
 }
