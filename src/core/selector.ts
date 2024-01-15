@@ -7,12 +7,5 @@ export type RecoilSelectorOptions<T> = {
 };
 
 export function selector<T>(options: RecoilSelectorOptions<T>) {
-  return atom(async (get: Getter) => {
-    try {
-      return await options.get({ get });
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  });
+  return atom((get: Getter) => options.get({ get }));
 }
