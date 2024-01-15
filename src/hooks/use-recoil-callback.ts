@@ -22,6 +22,7 @@ export type UseRecoilCallbackParams = {
     getPromise: <Value>(
       atom: WritableAtom<Value, [SetStateAction<Value>], unknown>,
     ) => Promise<Value>;
+    retain: () => () => void;
   };
 };
 
@@ -51,6 +52,10 @@ export function useRecoilCallback<T extends (...args: any[]) => ReturnType<T>>(
         reset: wrappedReset,
         snapshot: {
           getPromise: async (atom) => get(atom),
+          retain: () => () => {
+            // Shim
+            return;
+          },
         },
       })(...args);
     },
