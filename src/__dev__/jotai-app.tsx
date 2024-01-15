@@ -4,6 +4,7 @@ import { selector } from "../core/selector";
 import { useRecoilState } from "../hooks/use-recoil-state";
 import { useRecoilValue } from "../hooks/use-recoil-value";
 import { useSetRecoilState } from "../hooks/use-set-recoil-state";
+import { useRecoilCallback } from "../hooks/use-recoil-callback";
 import React, { ChangeEvent, MouseEvent, Suspense, useState } from "react";
 
 export interface Todo {
@@ -34,7 +35,7 @@ const fooStateFam = atomFamily<string, string>({
 
 const fooSelector = selector({
   key: "foo-selector",
-  get: ({ get }) => `${get(fooStateFam("foo-2"))}~~${get(numTodosState)}`,
+  get: ({ get }) => get(todosState),
 });
 
 const NewTodo: React.FC = () => {
@@ -101,6 +102,9 @@ export const JotaiApp = () => {
   const fam1 = useRecoilValue(fooStateFam("foo-1"));
   const [fam2, setFam2] = useRecoilState(fooStateFam("2"));
   const sel1 = useRecoilValue(fooSelector);
+  const alertValue = useRecoilCallback(({ snapshot }) => async () => {
+    alert(`${await snapshot.getPromise(fooSelector)}`);
+  });
   return (
     <Suspense>
       <div className="App">
@@ -108,7 +112,8 @@ export const JotaiApp = () => {
         <TodoList />
         <NumTodos />
         <br />
-        {fam1}.
+        {fam1}
+        <br />
         <button
           onClick={() => setFam2((prev: string) => String(Number(prev) + 1))}
         >
@@ -116,7 +121,8 @@ export const JotaiApp = () => {
         </button>
       </div>
       <br />
-      {sel1}
+
+      <button onClick={alertValue}>alert selector value – {sel1.length}</button>
     </Suspense>
   );
 };

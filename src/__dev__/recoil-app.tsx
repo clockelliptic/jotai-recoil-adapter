@@ -3,6 +3,7 @@ import {
   atom,
   atomFamily,
   selector,
+  useRecoilCallback,
   useRecoilState,
   useRecoilValue,
   useSetRecoilState,
@@ -104,6 +105,10 @@ export const RecoilAppComp = () => {
   const fam1 = useRecoilValue(fooStateFam("foo-1"));
   const [fam2, setFam2] = useRecoilState(fooStateFam("2"));
   const sel1 = useRecoilValue(fooSelector);
+
+  const alertValue = useRecoilCallback(({ snapshot }) => async () => {
+    alert(`${await snapshot.getPromise(fooSelector)}`);
+  });
   return (
     <RecoilRoot>
       <Suspense>
@@ -112,7 +117,8 @@ export const RecoilAppComp = () => {
           <TodoList />
           <NumTodos />
           <br />
-          {fam1}.
+          {fam1}
+          <br />
           <button
             onClick={() => setFam2((prev: string) => String(Number(prev) + 1))}
           >
@@ -120,7 +126,10 @@ export const RecoilAppComp = () => {
           </button>
         </div>
         <br />
-        {sel1.length}
+
+        <button onClick={alertValue}>
+          alert selector value – {sel1.length}
+        </button>
       </Suspense>
     </RecoilRoot>
   );
