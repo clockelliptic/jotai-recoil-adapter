@@ -1,7 +1,7 @@
-import { Atom, useAtom, SetStateAction } from "jotai";
+import { useAtom, SetStateAction, WritableAtom } from "jotai";
 
 export function useRecoilState<T>(
-  recoilState: Atom<T>,
+  recoilState: WritableAtom<T, [SetStateAction<T>], unknown>,
 ): [T, (newValue: T | SetStateAction<T>) => void] {
   return useAtom(recoilState);
 }

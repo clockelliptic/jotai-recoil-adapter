@@ -1,4 +1,4 @@
-import { atom, Getter, Atom, WritableAtom, SetStateAction } from "jotai";
+import { atom, Getter, WritableAtom, SetStateAction } from "jotai";
 import { atomFamily, unwrap } from "jotai/utils";
 import deepEqual from "fast-deep-equal";
 
@@ -18,7 +18,7 @@ export type SelectorFamilyOptionss<T, Param> = {
 export function selectorFamily<T, Param>(
   options: SelectorFamilyOptionss<T, Param>,
 ) {
-  const fam = atomFamily<Param, Atom<T>>(
+  const fam = atomFamily<Param, WritableAtom<T, [SetStateAction<T>], unknown>>(
     (param) =>
       atom(
         (get: Getter) => options.get(param)({ get }),

@@ -1,5 +1,5 @@
 import { RESET, useAtomCallback } from "jotai/utils";
-import { Atom, Getter, SetStateAction, Setter, WritableAtom } from "jotai";
+import { Getter, SetStateAction, Setter, WritableAtom } from "jotai";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type ReactUseCallbackHook = <T extends Function>(
@@ -20,7 +20,7 @@ export type UseRecoilCallbackParams = {
   ) => void;
   snapshot: {
     getPromise: <Value>(
-      atom: Atom<Value> | WritableAtom<Value, [SetStateAction<Value>], unknown>,
+      atom: WritableAtom<Value, [SetStateAction<Value>], unknown>,
     ) => Promise<Value>;
   };
 };
