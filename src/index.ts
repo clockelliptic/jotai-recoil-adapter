@@ -6,6 +6,7 @@ import { useRecoilCallback } from "./hooks/use-recoil-callback";
 import { useRecoilState } from "./hooks/use-recoil-state";
 import { useRecoilValue } from "./hooks/use-recoil-value";
 import { useSetRecoilState } from "./hooks/use-set-recoil-state";
+import { useResetRecoilState } from "./hooks/use-reset-recoil-state";
 
 export {
   atom,
@@ -16,4 +17,5 @@ export {
   useRecoilState,
   useRecoilValue,
   useSetRecoilState,
+  useResetRecoilState,
 };
