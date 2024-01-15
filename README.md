@@ -43,13 +43,10 @@ import {
   atom,
   selector,
   atomFamily,
-  selectorFamily,
   useRecoilState,
   useRecoilValue,
   useSetRecoilState,
   useRecoilCallback,
-  // with specialized support for @react-three/fiber
-  useRecoilBridgeAcrossReactRoots_UNSTABLE,
 } from 'jotai-recoil-adapter';
 ```
 

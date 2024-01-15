@@ -11,7 +11,8 @@
   ],
   "keywords": [
     "jotai",
-    "recoil"
+    "recoil",
+    "react"
   ],
   "repository": "https://github.com/clockelliptic/jotai-recoil-adapter.git",
   "scripts": {
