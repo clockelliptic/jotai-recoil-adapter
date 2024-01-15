@@ -2,6 +2,7 @@ import {
   atomFamily as jotaiAtomFamily,
   atomWithReset as jotaiAtom,
 } from "jotai/utils";
+import deepEqual from "fast-deep-equal";
 
 type GetDefaultValue<T, Param> = (param: Param) => T;
 
@@ -17,6 +18,6 @@ export function atomFamily<T, Param>(params: AtomFamilyParams<T, Param>) {
         ? (params.default as GetDefaultValue<T, Param>)(param)
         : params.default;
     return jotaiAtom(defaultValue);
-  });
+  }, deepEqual);
   return stateFam;
 }

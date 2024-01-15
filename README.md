@@ -12,7 +12,7 @@
     - [Composing Jotai Atoms with `jotai-recoil-adapter`](#composing-jotai-atoms-with-jotai-recoil-adapter)
     - [`atom` (initialized with an asynchronous selector)](#atom-initialized-with-an-asynchronous-selector)
     - [`selector`](#selector)
-    - [`selector` (asynchronous selector)](#selector-asynchronous-selector)
+    - [`selector` (asynchronous) as `asyncSelector`](#selector-asynchronous-as-asyncselector)
     - [`atomFamily`](#atomfamily)
     - [`useRecoilState`](#userecoilstate)
     - [`useRecoilValue`](#userecoilvalue)
@@ -134,19 +134,37 @@ const countSelector = selector({
 });
 ```
 
-### `selector` (asynchronous selector)
+### `selector` (asynchronous) as `asyncSelector`
 
-Asynchronous selector:
+Asynchronous selector implemented using a special adapter:
+
+```ts
+type AsyncRecoilSelectorOptions<T, U> = {
+  key: string;
+  get: ({ get }) => Promise<T>;
+  fallback: U;
+};
+```
 
 ```jsx
-import { selector } from 'jotai-recoil-adapter';
+import { asyncSelector } from 'jotai-recoil-adapter';
 
-const userDataSelector = selector({
+const randomNumberSelector = asyncSelector<number, "Crunching numbers...">({
+  key: 'randomNumberSelector',
+  get: async ({ get }) => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return Math.random();
+  },
+  fallback: "Crunching numbers..."
+});
+
+const userDataSelector = asynSelector<User, null>({
   key: 'userData',
   get: async ({ get }) => {
     const response = await fetch('/api/user/data');
     return response.json();
   },
+  fallback: null
 });
 ```
 

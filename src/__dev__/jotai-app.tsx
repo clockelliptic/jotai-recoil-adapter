@@ -1,6 +1,6 @@
 import { atomFamily } from "../core/atom-family";
 import { atom } from "../core/atom";
-import { selector } from "../core/selector";
+import { selector, asyncSelector } from "../core/selector";
 import { useRecoilState } from "../hooks/use-recoil-state";
 import { useRecoilValue } from "../hooks/use-recoil-value";
 import { useSetRecoilState } from "../hooks/use-set-recoil-state";
@@ -12,6 +12,8 @@ import React, {
   useState,
   useCallback,
 } from "react";
+import { asyncSelectorFamily } from "../core/selector-family";
+import { waitForAll } from "../core/wait-for-all";
 
 export interface Todo {
   id: string;
@@ -43,6 +45,33 @@ const fooSelector = selector({
   key: "foo-selector",
   get: ({ get }) => get(todosState),
 });
+
+const randomNumberSelector = asyncSelector<number, "Crunching numbers...">({
+  key: "randomNumberSelector",
+  get: async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    return Math.random();
+  },
+  fallback: "Crunching numbers...",
+});
+
+const randomIDSelectorFam = asyncSelectorFamily<
+  string,
+  string,
+  "Fetching ID..."
+>({
+  key: "randomIDSelectorFam",
+  get: (param: string) => async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    return `#${param}.${Math.random()}`;
+  },
+  fallback: "Fetching ID...",
+});
+
+const allIdsAtom = waitForAll([
+  randomIDSelectorFam("bob"),
+  randomIDSelectorFam("alice"),
+]);
 
 const NewTodo: React.FC = () => {
   const [todoName, setTodoName] = useState("");
@@ -112,9 +141,12 @@ export const JotaiApp = () => {
     useCallback,
     ({ snapshot }) =>
       async () => {
-        alert(`${await snapshot.getPromise(fooSelector)}`);
+        alert(`${(await snapshot.getPromise(fooSelector)).map((x) => x.name)}`);
       },
   );
+  const randNum = useRecoilValue(randomNumberSelector);
+  const ids = useRecoilValue(allIdsAtom);
+  console.log(ids);
   return (
     <Suspense>
       <div className="App">
@@ -131,8 +163,17 @@ export const JotaiApp = () => {
         </button>
       </div>
       <br />
-
       <button onClick={alertValue}>alert selector value – {sel1.length}</button>
+      <br />
+      Random number: {randNum}
+      <br />
+      {"["}
+      {ids.map((id, i) => (
+        <>
+          <span key={`id${i}`}>{id}</span>,{" "}
+        </>
+      ))}
+      {"]"}
     </Suspense>
   );
 };
