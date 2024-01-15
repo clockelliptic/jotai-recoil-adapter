@@ -1,6 +1,7 @@
 import { atomFamily } from "../core/atom-family";
 import { atom } from "../core/atom";
 import { selector, asyncSelector } from "../core/selector";
+import { selectorFamily, asyncSelectorFamily } from "../core/selector-family";
 import { useRecoilState } from "../hooks/use-recoil-state";
 import { useRecoilValue } from "../hooks/use-recoil-value";
 import { useSetRecoilState } from "../hooks/use-set-recoil-state";
@@ -12,7 +13,6 @@ import {
   Suspense,
   useState,
 } from "react";
-import { asyncSelectorFamily } from "../core/selector-family";
 import { waitForAll } from "../core/wait-for-all";
 
 export interface Todo {
@@ -72,6 +72,31 @@ const allIdsAtom = waitForAll([
   randomIDSelectorFam("bob"),
   randomIDSelectorFam("alice"),
 ]);
+
+const composableAtomFam = atomFamily({
+  key: "composed-atom-fam",
+  default: (param) => param,
+});
+
+const composableAtomFam2 = atomFamily<number, string>({
+  key: "composed-atom-fam-2",
+  default: (param) => param.length,
+});
+
+const composedSelectorFam = selectorFamily<string, string>({
+  key: "composed-selector-fam",
+  get:
+    (param) =>
+    ({ get }) =>
+      get(composableAtomFam(param)) +
+      String(get(composableAtomFam2(param))) +
+      " (composed)",
+  set:
+    (param) =>
+    ({ set }, newValue) => {
+      set(composableAtomFam(param), newValue);
+    },
+});
 
 const NewTodo: FunctionComponent = () => {
   const [todoName, setTodoName] = useState("");
@@ -140,6 +165,13 @@ export const JotaiApp = () => {
   const alertValue = useRecoilCallback(({ snapshot }) => async () => {
     alert(`${(await snapshot.getPromise(fooSelector)).map((x) => x.name)}`);
   });
+  const setMeToCarol = useRecoilValue(composedSelectorFam("set-me-to-carol"));
+  const derived = useRecoilValue(
+    composedSelectorFam(setMeToCarol.split(" ")[0]),
+  );
+  const setIdToCarol = useRecoilCallback(({ set }) => async () => {
+    set(composedSelectorFam("set-me-to-carol"), "carol");
+  });
   const randNum = useRecoilValue(randomNumberSelector);
   const ids = useRecoilValue(allIdsAtom);
   console.log(ids);
@@ -160,6 +192,9 @@ export const JotaiApp = () => {
       </div>
       <br />
       <button onClick={alertValue}>alert selector value – {sel1.length}</button>
+      <br />
+      <button onClick={setIdToCarol}>set carol</button>
+      {setMeToCarol} {"->"} {derived}
       <br />
       Random number: {randNum}
       <br />
