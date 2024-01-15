@@ -1,8 +1,8 @@
 import { RESET, useAtomCallback } from "jotai/utils";
 import { Getter, SetStateAction, Setter, WritableAtom } from "jotai";
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type ReactUseCallbackHook = <T extends Function>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ReactUseCallbackHook = <T extends (...args: any[]) => any>(
   callback: T,
   deps: readonly unknown[],
 ) => T;
