@@ -9,6 +9,11 @@
   "files": [
     "dist"
   ],
+  "keywords": [
+    "jotai",
+    "recoil"
+  ],
+  "repository": "https://github.com/clockelliptic/jotai-recoil-adapter.git",
   "scripts": {
     "dev": "tsc && vite build --watch",
     "start": "vite --host --open",
