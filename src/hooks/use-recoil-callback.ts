@@ -1,11 +1,6 @@
 import { RESET, useAtomCallback } from "jotai/utils";
 import { Getter, SetStateAction, Setter, WritableAtom } from "jotai";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type ReactUseCallbackHook = <T extends (...args: any[]) => any>(
-  callback: T,
-  deps: readonly unknown[],
-) => T;
+import { useCallback } from "react";
 
 export type UseRecoilCallbackParams = {
   get: <Value>(
@@ -28,7 +23,6 @@ export type UseRecoilCallbackParams = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useRecoilCallback<T extends (...args: any[]) => ReturnType<T>>(
-  useCallback: ReactUseCallbackHook,
   callback: (params: UseRecoilCallbackParams) => T,
   deps?: readonly unknown[],
 ): (...args: Parameters<T>) => ReturnType<T> {

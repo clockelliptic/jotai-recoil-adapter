@@ -8,7 +8,13 @@ import {
   useRecoilValue,
   useSetRecoilState,
 } from "recoil";
-import React, { ChangeEvent, MouseEvent, Suspense, useState } from "react";
+import {
+  ChangeEvent,
+  FunctionComponent,
+  MouseEvent,
+  Suspense,
+  useState,
+} from "react";
 
 export interface Todo {
   id: string;
@@ -41,7 +47,7 @@ const fooSelector = selector({
   get: ({ get }) => get(todosState),
 });
 
-const NewTodo: React.FC = () => {
+const NewTodo: FunctionComponent = () => {
   const [todoName, setTodoName] = useState("");
   const setTodos = useSetRecoilState(todosState);
 

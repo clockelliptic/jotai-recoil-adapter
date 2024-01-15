@@ -17,7 +17,7 @@
     - [`useRecoilState`](#userecoilstate)
     - [`useRecoilValue`](#userecoilvalue)
     - [`useSetRecoilState`](#usesetrecoilstate)
-    - [WARNING `useRecoilCallback`](#warning-userecoilcallback)
+    - [`useRecoilCallback`](#userecoilcallback)
     - [`useRecoilBridgeAcrossReactRootsUNSTABLE` (use with React portal)](#userecoilbridgeacrossreactrootsunstable-use-with-react-portal)
     - [`useRecoilBridgeAcrossReactRootsUNSTABLE` (use with react-three-fiber)](#userecoilbridgeacrossreactrootsunstable-use-with-react-three-fiber)
   - [Use-Case](#use-case)
@@ -211,18 +211,14 @@ import { useSetRecoilState } from 'jotai-recoil-adapter';
 const setCount = useSetRecoilState(countState);
 ```
 
-### WARNING `useRecoilCallback`
-
-__NOTE:__ Must pass `React.useCallback` as first argument of the `useRecoilCallback` adapter.
+### `useRecoilCallback`
 
 Hook to interact with multiple atoms/selectors:
 
 ```jsx
-import { useCallback } from 'react';
 import { useRecoilCallback } from 'jotai-recoil-adapter';
 
 const logCount = useRecoilCallback(
-  useCallback,
   ({ snapshot }) => async () => {
     const count = await snapshot.getPromise(countState);
     console.log(count);

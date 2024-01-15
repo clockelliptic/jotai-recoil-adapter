@@ -5,12 +5,12 @@ import { useRecoilState } from "../hooks/use-recoil-state";
 import { useRecoilValue } from "../hooks/use-recoil-value";
 import { useSetRecoilState } from "../hooks/use-set-recoil-state";
 import { useRecoilCallback } from "../hooks/use-recoil-callback";
-import React, {
+import {
   ChangeEvent,
+  FunctionComponent,
   MouseEvent,
   Suspense,
   useState,
-  useCallback,
 } from "react";
 import { asyncSelectorFamily } from "../core/selector-family";
 import { waitForAll } from "../core/wait-for-all";
@@ -73,7 +73,7 @@ const allIdsAtom = waitForAll([
   randomIDSelectorFam("alice"),
 ]);
 
-const NewTodo: React.FC = () => {
+const NewTodo: FunctionComponent = () => {
   const [todoName, setTodoName] = useState("");
   const setTodos = useSetRecoilState(todosState);
 
@@ -137,13 +137,9 @@ export const JotaiApp = () => {
   const fam1 = useRecoilValue(fooStateFam("foo-1"));
   const [fam2, setFam2] = useRecoilState(fooStateFam("2"));
   const sel1 = useRecoilValue(fooSelector);
-  const alertValue = useRecoilCallback(
-    useCallback,
-    ({ snapshot }) =>
-      async () => {
-        alert(`${(await snapshot.getPromise(fooSelector)).map((x) => x.name)}`);
-      },
-  );
+  const alertValue = useRecoilCallback(({ snapshot }) => async () => {
+    alert(`${(await snapshot.getPromise(fooSelector)).map((x) => x.name)}`);
+  });
   const randNum = useRecoilValue(randomNumberSelector);
   const ids = useRecoilValue(allIdsAtom);
   console.log(ids);
