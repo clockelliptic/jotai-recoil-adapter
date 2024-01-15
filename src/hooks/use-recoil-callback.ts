@@ -13,7 +13,7 @@ export type UseRecoilCallbackParams = {
   ) => Value | Promise<Value>;
   set: <Value>(
     atom: WritableAtom<Value, [SetStateAction<Value>], unknown>,
-    newValue: Value,
+    newValue: Value | ((prev: Value) => Value),
   ) => void;
   reset: <Value>(
     atom: WritableAtom<Value, [SetStateAction<Value>], unknown>,
@@ -39,7 +39,7 @@ export function useRecoilCallback<T extends (...args: any[]) => ReturnType<T>>(
       ) => get(atom);
       const wrappedSet = <Value>(
         atom: WritableAtom<Value, [SetStateAction<Value>], unknown>,
-        newValue: Value,
+        newValue: Value | ((prev: Value) => Value),
       ) => set(atom, newValue);
       const wrappedReset = <Value>(
         atom: WritableAtom<Value, [SetStateAction<Value>], unknown>,
