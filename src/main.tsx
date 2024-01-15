@@ -79,7 +79,7 @@ export const TodoList: React.FC = () => {
       ...todoList[index],
       completed: !todoList[index].completed,
     };
-    setTodo(todoList);
+    setTodo(() => todoList);
   };
 
   const todoList = todos
@@ -95,14 +95,19 @@ export const TodoList: React.FC = () => {
 
 const App = () => {
   const fam1 = useRecoilValue(fooStateFam("foo-1"));
-  const fam2 = useRecoilValue(fooStateFam("foo-2"));
+  const [fam2, setFam2] = useRecoilState(fooStateFam("2"));
   return (
     <Suspense>
       <div className="App">
         <NewTodo />
         <TodoList />
         <NumTodos />
-        {fam1}.{fam2}
+        {fam1}.
+        <button
+          onClick={() => setFam2((prev: string) => String(Number(prev) + 1))}
+        >
+          foo-{fam2}
+        </button>
       </div>
     </Suspense>
   );
