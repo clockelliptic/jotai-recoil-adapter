@@ -46,7 +46,7 @@ import {
   useRecoilState,
   useRecoilValue,
   useSetRecoilState,
-  useReetRecoilState,
+  useResetRecoilState,
   useRecoilCallback,
 } from 'jotai-recoil-adapter';
 ```
