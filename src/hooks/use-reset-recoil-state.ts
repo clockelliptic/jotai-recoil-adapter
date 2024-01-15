@@ -1,0 +1,10 @@
+import { useSetAtom, WritableAtom } from "jotai";
+import { RESET } from "jotai/utils";
+
+export function useResetRecoilState<T>(
+  state: WritableAtom<T, [T], unknown>,
+): (newValue: T) => void {
+  const set = useSetAtom(state);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return () => set(RESET as any);
+}

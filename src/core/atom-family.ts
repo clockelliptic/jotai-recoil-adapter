@@ -1,5 +1,7 @@
-import { atom } from "jotai";
-import { atomFamily as jotaiAtomFamily } from "jotai/utils";
+import {
+  atomFamily as jotaiAtomFamily,
+  atomWithReset as jotaiAtom,
+} from "jotai/utils";
 
 type GetDefaultValue<T, Param> = (param: Param) => T;
 
@@ -14,7 +16,7 @@ export function atomFamily<T, Param>(params: AtomFamilyParams<T, Param>) {
       typeof params.default === "function"
         ? (params.default as GetDefaultValue<T, Param>)(param)
         : params.default;
-    return atom(defaultValue);
+    return jotaiAtom(defaultValue);
   });
   return stateFam;
 }
