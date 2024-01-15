@@ -25,6 +25,9 @@
     "format:scripts": "prettier . --write",
     "format:styles": "stylelint ./**/*.{css,scss} --fix"
   },
+  "peerDependencies": {
+    "react": ">= 17.0.2 <= 18"
+  },
   "dependencies": {
     "fast-deep-equal": "^3.1.3",
     "jotai": "^2.6.1"
