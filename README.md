@@ -39,7 +39,6 @@ npm i jotai-recoil-adapter
 The adapter supports the following Recoil features:
 ```ts
 import {
-  RecoilRoot,
   atom,
   selector,
   atomFamily,
@@ -57,19 +56,7 @@ import {
 
 ### `RecoilRoot`
 
-Wrap your application or part of it with `RecoilRoot` to provide the state context:
-
-```jsx
-import { RecoilRoot } from 'jotai-recoil-adapter';
-
-function App() {
-  return (
-    <RecoilRoot>
-      <MyComponent />
-    </RecoilRoot>
-  );
-}
-```
+Wrap your application in a Jotai provider, or use providerless mode.
 
 ### `atom`
 

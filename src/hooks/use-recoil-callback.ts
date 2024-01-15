@@ -1,6 +1,11 @@
 import { RESET, useAtomCallback } from "jotai/utils";
-import { Atom, WritableAtom } from "jotai";
-import { useCallback } from "react";
+import { Atom, Getter, Setter, WritableAtom } from "jotai";
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+type ReactUseCallbackHook = <T extends Function>(
+  callback: T,
+  deps: readonly unknown[],
+) => T;
 
 export type UseRecoilCallbackParams = {
   get: <Value>(
@@ -20,33 +25,33 @@ export type UseRecoilCallbackParams = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useRecoilCallback<T extends (...args: any[]) => ReturnType<T>>(
+  useCallback: ReactUseCallbackHook,
   callback: (params: UseRecoilCallbackParams) => T,
+  deps?: ReadonlyArray<never>,
 ): (...args: Parameters<T>) => ReturnType<T> {
-  return useAtomCallback(
-    useCallback(
-      (get, set, ...args: Parameters<T>) => {
-        const wrappedGet = <Value>(
-          atom: WritableAtom<Value, [Value], unknown>,
-        ) => get(atom);
-        const wrappedSet = <Value>(
-          atom: WritableAtom<Value, [Value], unknown>,
-          newValue: Value,
-        ) => set(atom, newValue);
-        const wrappedReset = <Value>(
-          atom: WritableAtom<Value, [Value], unknown>,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ) => set(atom, RESET as any);
+  const cb = useCallback(
+    (get: Getter, set: Setter, ...args: Parameters<T>) => {
+      const wrappedGet = <Value>(atom: WritableAtom<Value, [Value], unknown>) =>
+        get(atom);
+      const wrappedSet = <Value>(
+        atom: WritableAtom<Value, [Value], unknown>,
+        newValue: Value,
+      ) => set(atom, newValue);
+      const wrappedReset = <Value>(
+        atom: WritableAtom<Value, [Value], unknown>,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ) => set(atom, RESET as any);
 
-        return callback({
-          get: wrappedGet,
-          set: wrappedSet,
-          reset: wrappedReset,
-          snapshot: {
-            getPromise: async (atom) => get(atom),
-          },
-        })(...args);
-      },
-      [callback],
-    ),
+      return callback({
+        get: wrappedGet,
+        set: wrappedSet,
+        reset: wrappedReset,
+        snapshot: {
+          getPromise: async (atom) => get(atom),
+        },
+      })(...args);
+    },
+    !deps ? (undefined as unknown as readonly unknown[]) : [...deps],
   );
+  return useAtomCallback(cb);
 }

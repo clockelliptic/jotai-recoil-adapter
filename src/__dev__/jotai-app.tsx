@@ -5,7 +5,13 @@ import { useRecoilState } from "../hooks/use-recoil-state";
 import { useRecoilValue } from "../hooks/use-recoil-value";
 import { useSetRecoilState } from "../hooks/use-set-recoil-state";
 import { useRecoilCallback } from "../hooks/use-recoil-callback";
-import React, { ChangeEvent, MouseEvent, Suspense, useState } from "react";
+import React, {
+  ChangeEvent,
+  MouseEvent,
+  Suspense,
+  useState,
+  useCallback,
+} from "react";
 
 export interface Todo {
   id: string;
@@ -102,9 +108,13 @@ export const JotaiApp = () => {
   const fam1 = useRecoilValue(fooStateFam("foo-1"));
   const [fam2, setFam2] = useRecoilState(fooStateFam("2"));
   const sel1 = useRecoilValue(fooSelector);
-  const alertValue = useRecoilCallback(({ snapshot }) => async () => {
-    alert(`${await snapshot.getPromise(fooSelector)}`);
-  });
+  const alertValue = useRecoilCallback(
+    useCallback,
+    ({ snapshot }) =>
+      async () => {
+        alert(`${await snapshot.getPromise(fooSelector)}`);
+      },
+  );
   return (
     <Suspense>
       <div className="App">

@@ -1,6 +1,5 @@
 import { atom } from "./core/atom";
 import { atomFamily } from "./core/atom-family";
-import { RecoilRoot } from "./core/recoil-root";
 import { selector } from "./core/selector";
 import { useRecoilCallback } from "./hooks/use-recoil-callback";
 import { useRecoilState } from "./hooks/use-recoil-state";
@@ -12,7 +11,6 @@ export {
   atom,
   atomFamily,
   selector,
-  RecoilRoot,
   useRecoilCallback,
   useRecoilState,
   useRecoilValue,
