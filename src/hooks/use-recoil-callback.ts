@@ -29,7 +29,7 @@ export type UseRecoilCallbackParams = {
 export function useRecoilCallback<T extends (...args: any[]) => ReturnType<T>>(
   useCallback: ReactUseCallbackHook,
   callback: (params: UseRecoilCallbackParams) => T,
-  deps?: ReadonlyArray<never>,
+  deps?: readonly unknown[],
 ): (...args: Parameters<T>) => ReturnType<T> {
   const cb = useCallback(
     (get: Getter, set: Setter, ...args: Parameters<T>) => {
