@@ -24,3 +24,10 @@ export type RecoilSetSelector<T> = (
   newValue: SetStateAction<T>,
 ) => void;
 
+export type RecoilGetSelectorFamily<Param, T> = (
+  param: Param,
+) => RecoilGetSelector<T>;
+
+export type RecoilSetSelectorFamily<Param, T> = (
+  param: Param,
+) => RecoilSetSelector<T>;
