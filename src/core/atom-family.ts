@@ -3,6 +3,7 @@ import {
   atomWithReset as jotaiAtom,
 } from "jotai/utils";
 import deepEqual from "fast-deep-equal";
+import { SetStateAction, WritableAtom } from "jotai";
 
 type GetDefaultValue<T, Param> = (param: Param) => T;
 
@@ -17,7 +18,11 @@ export function atomFamily<T, Param>(params: AtomFamilyParams<T, Param>) {
       typeof params.default === "function"
         ? (params.default as GetDefaultValue<T, Param>)(param)
         : params.default;
-    return jotaiAtom(defaultValue);
+    return jotaiAtom(defaultValue) as WritableAtom<
+      T,
+      [SetStateAction<T>],
+      unknown
+    >;
   }, deepEqual);
   return stateFam;
 }

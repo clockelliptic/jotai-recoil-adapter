@@ -1,7 +1,7 @@
-import { WritableAtom, useSetAtom } from "jotai";
+import { SetStateAction, WritableAtom, useSetAtom } from "jotai";
 
 export function useSetRecoilState<T>(
-  state: WritableAtom<T, [T], unknown>,
-): (newValue: T) => void {
+  state: WritableAtom<T, [SetStateAction<T>], unknown>,
+): (newValue: T | ((prev: T) => T)) => void {
   return useSetAtom(state);
 }
