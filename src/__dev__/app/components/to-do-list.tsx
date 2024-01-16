@@ -67,6 +67,7 @@ export const TodosContainer: FunctionComponent<DevComponentProps> = (props) => {
             pagination={{
               position: "bottom",
               pageSize: 10,
+              pageSizeOptions: [10, 20, 50, 100, 1000, 10000, 100000, 250000],
             }}
           />
         </Card>

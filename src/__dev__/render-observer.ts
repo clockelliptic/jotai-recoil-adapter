@@ -9,23 +9,32 @@ declare global {
 }
 
 const logRenderMessages = false;
-const logrenderTraces = false;
+const logRenderTraces = false;
 
-export const observeRender = (componentName: string, appId: string) => {
+export const observeRender = (
+  componentName: string,
+  appId: string,
+  opts?: {
+    logRenderTraces?: boolean;
+    logRenderMessages?: boolean;
+  },
+) => {
   if (!window.renderTrace) {
     window.renderTrace = {};
   }
   if (!window.renderTrace[appId]) {
     window.renderTrace[appId] = {};
   }
-  if (typeof window.renderTrace[componentName] !== "number") {
+  if (typeof window.renderTrace[appId][componentName] !== "number") {
     window.renderTrace[appId][componentName] = 0;
   }
   window.renderTrace[appId][componentName] += 1;
-  if (logRenderMessages) {
-    console.log(`Render <${componentName} appId="${appId}" />`);
+  if (logRenderMessages || opts?.logRenderMessages) {
+    console.log(
+      `Render <${componentName} appId="${appId}" /> --> ${window.renderTrace[appId][componentName]}`,
+    );
   }
-  if (logrenderTraces) {
+  if (logRenderTraces || opts?.logRenderTraces) {
     console.log(window.renderTrace);
   }
 };

@@ -9,13 +9,18 @@ import {
 import { observeRender } from "../render-observer";
 import { uniqueId } from "lodash";
 
-const initialState: Todo[] = [
-  {
-    name: "dummy todo",
-    id: uniqueId(),
+export const createTodo = () => {
+  const id = uniqueId();
+  return {
+    name: `To Do: ${id}`,
+    id,
     completed: false,
-  },
-];
+  };
+};
+
+const initialState: Todo[] = Array.from({ length: 1 }, (_, i) => i).map(
+  createTodo,
+);
 
 export const useAtomicStateFactory = <LibName extends keyof StateFactoryArgs>(
   libName: LibName,
