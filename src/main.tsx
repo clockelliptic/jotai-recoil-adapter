@@ -1,17 +1,11 @@
-import { JotaiApp } from "./__dev__/jotai-app";
-import { RecoilApp } from "./__dev__/recoil-app";
+import { DevAppFactory } from "./__dev__/app/app";
 import ReactDOM from "react-dom/client";
 
 const App = () => {
+  console.log("Render Main");
   return (
     <>
-      <h1>Jotai App</h1>
-      <JotaiApp />
-      <br />
-      <hr />
-      <br />
-      <h1>Recoil App</h1>
-      <RecoilApp />
+      <DevAppFactory />
     </>
   );
 };

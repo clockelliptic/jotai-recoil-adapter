@@ -175,10 +175,10 @@ Atom family for creating a series of atoms based on parameters:
 ```jsx
 import { atomFamily } from 'jotai-recoil-adapter';
 
-const itemStateFamily = atomFamily((itemId) => ({
+const itemStateFamily = atomFamily({
   key: `item/${itemId}`,
-  default: `Item ${itemId}`,
-}));
+  default: (itemId: string) => `Item ${itemId}`,
+});
 ```
 
 ### `useRecoilState`
