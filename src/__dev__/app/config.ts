@@ -19,6 +19,7 @@ const recoilLib = {
   atom: atom_Recoil,
   atomAsync: atom_Recoil,
   atomFamily: atomFamily_Recoil,
+  atomFamilyAsync: atomFamily_Recoil,
   selector: selector_Recoil,
   selectorDefault: selector_Recoil,
   asyncSelector: selector_Recoil,

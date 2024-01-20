@@ -5,6 +5,7 @@ import { observeRender } from "../../render-observer";
 import { uniqueId } from "lodash";
 import { Todo } from "../data-source/types";
 import { getTodos } from "../data-source/api";
+import { selectorDefaultFamily } from "core/selector-family";
 
 export const createTodo = () => {
   const id = uniqueId();
@@ -36,6 +37,7 @@ export const useAtomicStateFactory = <LibName extends keyof StateFactoryArgs>(
       atom,
       atomAsync,
       atomFamily,
+      atomFamilyAsync,
       selector,
       selectorDefault,
       asyncSelector,
@@ -70,6 +72,27 @@ export const useAtomicStateFactory = <LibName extends keyof StateFactoryArgs>(
       key: uniqueId() + "__intialTodos",
       default: selectorDefault({
         key: uniqueId() + "__intialTodosSelector",
+        get: async () => await getTodos(),
+      }),
+      fallback: [] as Todo[],
+    });
+
+    const todosState_ = atomFamilyAsync({
+      key: uniqueId() + "__intialTodos_",
+      default: selectorDefaultFamily({
+        key: uniqueId() + "__intialTodosSelector_",
+        get: (param: string) => async () => {
+          console.log("atomFamilyAsync selectorDefaultFamily param", param);
+          return await getTodos();
+        },
+      }),
+      fallback: [] as Todo[],
+    });
+
+    const todosState__ = atomFamilyAsync<Todo[], string, Todo[]>({
+      key: uniqueId() + "__intialTodos__",
+      default: selectorDefault({
+        key: uniqueId() + "__intialTodosSelector__",
         get: async () => await getTodos(),
       }),
       fallback: [] as Todo[],
@@ -134,6 +157,8 @@ export const useAtomicStateFactory = <LibName extends keyof StateFactoryArgs>(
       randomIDSelectorFam,
       allIdsAtom,
       composedSelectorFam,
+      todosState_,
+      todosState__,
       ...lib,
     };
   }, []);
