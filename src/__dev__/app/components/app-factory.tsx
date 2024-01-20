@@ -7,6 +7,7 @@ import { useAtomicStateFactory } from "../state";
 import { AppIdProps } from "./types";
 import { Global, css } from "@emotion/react";
 import emotionNormalize from "emotion-normalize";
+import { PerfDemoEffect } from "./perf-demo";
 
 export const AppFactory: FunctionComponent<AppIdProps> = ({ appId }) => {
   const Lib = useAtomicStateFactory(appId, libs);
@@ -30,6 +31,7 @@ export const AppFactory: FunctionComponent<AppIdProps> = ({ appId }) => {
         <Suspense>
           <AppShell {...Lib}>
             <TodosContainer {...Lib} />
+            <PerfDemoEffect {...Lib} />
           </AppShell>
         </Suspense>
       </RecoilRoot>

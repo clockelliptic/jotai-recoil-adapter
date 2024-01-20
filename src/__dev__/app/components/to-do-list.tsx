@@ -59,6 +59,7 @@ export const TodosContainer: FunctionComponent<DevComponentProps> = (props) => {
       >
         <Card title="Todo List">
           <List
+            id="todos-list"
             locale={{
               emptyText: "There's nothing to do :(",
             }}

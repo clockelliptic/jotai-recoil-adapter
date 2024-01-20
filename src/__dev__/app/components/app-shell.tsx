@@ -9,8 +9,10 @@ const { darkAlgorithm, defaultAlgorithm, compactAlgorithm } = theme;
 const { Header, Content } = Layout;
 
 const navigation = [
-  { label: "Jotai", key: "/" },
-  { label: "Recoil", key: "/recoil" },
+  { label: "Jotai Adapter", key: "/" },
+  { label: "Recoil Parity", key: "/recoil" },
+  { label: "Jotai Pure", key: "/jotai-pure" },
+  { label: "Recoil Pure", key: "/recoil-pure" },
 ];
 
 const useThemeSettings = ({

@@ -2,7 +2,7 @@ import { FunctionComponent } from "react";
 import { DevComponentProps } from "./types";
 import { Button, List, Popconfirm, Switch, Tag, Tooltip } from "antd";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import { Todo } from "../types";
+import { Todo } from "../data-source/types";
 import { observeRender } from "../../../__dev__/render-observer";
 
 export const TodoItem: FunctionComponent<

@@ -1,4 +1,9 @@
-import { AppIdNames, StateFactoryArgs } from "./types";
+import {
+  AppIdNames,
+  StateFactoryArgs,
+  RecoilStateFactoryArgs,
+  JotaiStateFactoryArgs,
+} from "./types";
 import {
   RecoilRoot as RecoilRoot_Recoil,
   atom as atom_Recoil,
@@ -16,8 +21,10 @@ import {
 import {
   RecoilRoot as RecoilRoot_Jotai,
   atom as atom_Jotai,
+  atomAsync as atomAsync_Jotai,
   atomFamily as atomFamily_Jotai,
   selector as selector_Jotai,
+  selectorDefault as selectorDefault_Jotai,
   asyncSelector as asyncSelector_Jotai,
   selectorFamily as selectorFamily_Jotai,
   asyncSelectorFamily as asyncSelectorFamily_Jotai,
@@ -30,11 +37,13 @@ import {
   waitForAll as waitForAll_Jotai,
 } from "../..";
 
-const recoilLib = {
+const recoilLib: RecoilStateFactoryArgs = {
   RecoilRoot: RecoilRoot_Recoil,
   atom: atom_Recoil,
+  atomAsync: atom_Recoil,
   atomFamily: atomFamily_Recoil,
   selector: selector_Recoil,
+  selectorDefault: selector_Recoil,
   asyncSelector: selector_Recoil,
   selectorFamily: selectorFamily_Recoil,
   asyncSelectorFamily: selectorFamily_Recoil,
@@ -48,11 +57,13 @@ const recoilLib = {
   waitForAll: waitForAll_Recoil,
 };
 
-const jotaiRecoilAdapter = {
+const jotaiRecoilAdapter: JotaiStateFactoryArgs = {
   RecoilRoot: RecoilRoot_Jotai,
   atom: atom_Jotai,
+  atomAsync: atomAsync_Jotai,
   atomFamily: atomFamily_Jotai,
   selector: selector_Jotai,
+  selectorDefault: selectorDefault_Jotai,
   asyncSelector: asyncSelector_Jotai,
   selectorFamily: selectorFamily_Jotai,
   asyncSelectorFamily: asyncSelectorFamily_Jotai,
@@ -66,7 +77,7 @@ const jotaiRecoilAdapter = {
   waitForAll: waitForAll_Jotai,
 };
 
-export const libs = {
+export const libs: StateFactoryArgs = {
   [AppIdNames.recoil]: recoilLib,
   [AppIdNames.jotaiRecoilAdapter]: jotaiRecoilAdapter,
-} as unknown as StateFactoryArgs;
+};

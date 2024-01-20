@@ -3,6 +3,9 @@ import { AppFactory } from "./components/app-factory";
 import { observeRender } from "../render-observer";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AppIdNames } from "./types";
+import { initializeLocalStorageData } from "./data-source/init-localstorage-data";
+
+initializeLocalStorageData();
 
 const Home = () => <AppFactory appId={AppIdNames.jotaiRecoilAdapter} />;
 

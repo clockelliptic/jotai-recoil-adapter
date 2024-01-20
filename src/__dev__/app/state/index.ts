@@ -1,13 +1,10 @@
 /* eslint-disable prefer-const */
 import { useMemo } from "react";
-import {
-  AppIdNames,
-  JotaiStateFactoryArgs,
-  StateFactoryArgs,
-  Todo,
-} from "./types";
-import { observeRender } from "../render-observer";
+import { JotaiStateFactoryArgs, StateFactoryArgs } from "../types";
+import { observeRender } from "../../render-observer";
 import { uniqueId } from "lodash";
+import { Todo } from "../data-source/types";
+import { getTodos } from "../data-source/api";
 
 export const createTodo = () => {
   const id = uniqueId();
@@ -15,13 +12,18 @@ export const createTodo = () => {
     name: `To Do: ${id}`,
     id,
     completed: false,
+    todoListId: "",
+    categoryIds: [] as string[],
+    userId: "",
   };
 };
 
-const initialState: Todo[] = Array.from({ length: 1 }, (_, i) => i).map(
-  createTodo,
-);
-
+/**
+ * We use this strange pattern to enforce 1:1 parity of
+ * jotai-recoil-adapter APIs and Recoil APIs, for the purposes
+ * of validating jotai-recoil-adapter and performing
+ * apples-to-apples comparison of perf and behavior.
+ */
 export const useAtomicStateFactory = <LibName extends keyof StateFactoryArgs>(
   libName: LibName,
   libs: StateFactoryArgs,
@@ -32,27 +34,23 @@ export const useAtomicStateFactory = <LibName extends keyof StateFactoryArgs>(
     const lib = libs[libName] as JotaiStateFactoryArgs;
     let {
       atom,
+      atomAsync,
       atomFamily,
       selector,
+      selectorDefault,
       asyncSelector,
       selectorFamily,
       asyncSelectorFamily,
       waitForAll,
     } = lib;
-    if (libName === AppIdNames.recoil) {
-      // @ts-expect-error EXPECTED
-      asyncSelector = selector;
-      // @ts-expect-error EXPECTED
-      asyncSelectorFamily = selectorFamily;
-    }
 
     const appThemeColorState = atom<"dark" | "light">({
-      key: uniqueId() + "__appTheme",
+      key: uniqueId() + "__appColorTheme",
       default: "dark",
     });
 
     const appThemeCompactState = atom<"compact" | "normal">({
-      key: uniqueId() + "__appTheme",
+      key: uniqueId() + "__appCompactnessTheme",
       default: "normal",
     });
 
@@ -62,12 +60,19 @@ export const useAtomicStateFactory = <LibName extends keyof StateFactoryArgs>(
         id: uniqueId(),
         name: "",
         completed: false,
+        todoListId: "",
+        categoryIds: [],
+        userId: "",
       },
     });
 
-    const todosState = atom({
-      key: uniqueId() + "__todos",
-      default: initialState,
+    const todosState = atomAsync({
+      key: uniqueId() + "__intialTodos",
+      default: selectorDefault({
+        key: uniqueId() + "__intialTodosSelector",
+        get: async () => await getTodos(),
+      }),
+      fallback: [] as Todo[],
     });
 
     const numTodosState = selector({
