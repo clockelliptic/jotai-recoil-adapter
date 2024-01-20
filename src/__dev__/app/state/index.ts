@@ -5,7 +5,6 @@ import { observeRender } from "../../render-observer";
 import { uniqueId } from "lodash";
 import { Todo } from "../data-source/types";
 import { getTodos } from "../data-source/api";
-import { selectorDefaultFamily } from "core/selector-family";
 
 export const createTodo = () => {
   const id = uniqueId();
@@ -40,6 +39,7 @@ export const useAtomicStateFactory = <LibName extends keyof StateFactoryArgs>(
       atomFamilyAsync,
       selector,
       selectorDefault,
+      selectorDefaultFamily,
       asyncSelector,
       selectorFamily,
       asyncSelectorFamily,

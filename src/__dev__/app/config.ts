@@ -24,6 +24,7 @@ const recoilLib = {
   selectorDefault: selector_Recoil,
   asyncSelector: selector_Recoil,
   selectorFamily: selectorFamily_Recoil,
+  selectorDefaultFamily: selectorFamily_Recoil,
   asyncSelectorFamily: selectorFamily_Recoil,
   useRecoilCallback: useRecoilCallback_Recoil,
   useRecoilState: useRecoilState_Recoil,
