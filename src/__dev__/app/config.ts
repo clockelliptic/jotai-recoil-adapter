@@ -1,10 +1,4 @@
 import {
-  AppIdNames,
-  StateFactoryArgs,
-  RecoilStateFactoryArgs,
-  JotaiStateFactoryArgs,
-} from "./types";
-import {
   RecoilRoot as RecoilRoot_Recoil,
   atom as atom_Recoil,
   atomFamily as atomFamily_Recoil,
@@ -18,26 +12,9 @@ import {
   useRecoilBridgeAcrossReactRoots_UNSTABLE as useRecoilBridgeAcrossReactRoots_UNSTABLE_Recoil,
   waitForAll as waitForAll_Recoil,
 } from "recoil";
-import {
-  RecoilRoot as RecoilRoot_Jotai,
-  atom as atom_Jotai,
-  atomAsync as atomAsync_Jotai,
-  atomFamily as atomFamily_Jotai,
-  selector as selector_Jotai,
-  selectorDefault as selectorDefault_Jotai,
-  asyncSelector as asyncSelector_Jotai,
-  selectorFamily as selectorFamily_Jotai,
-  asyncSelectorFamily as asyncSelectorFamily_Jotai,
-  useRecoilCallback as useRecoilCallback_Jotai,
-  useRecoilState as useRecoilState_Jotai,
-  useRecoilValue as useRecoilValue_Jotai,
-  useSetRecoilState as useSetRecoilState_Jotai,
-  useResetRecoilState as useResetRecoilState_Jotai,
-  useRecoilBridgeAcrossReactRoots_UNSTABLE as useRecoilBridgeAcrossReactRoots_UNSTABLE_Jotai,
-  waitForAll as waitForAll_Jotai,
-} from "../..";
+import * as jotaiRecoilAdapter from "../..";
 
-const recoilLib: RecoilStateFactoryArgs = {
+const recoilLib = {
   RecoilRoot: RecoilRoot_Recoil,
   atom: atom_Recoil,
   atomAsync: atom_Recoil,
@@ -57,27 +34,23 @@ const recoilLib: RecoilStateFactoryArgs = {
   waitForAll: waitForAll_Recoil,
 };
 
-const jotaiRecoilAdapter: JotaiStateFactoryArgs = {
-  RecoilRoot: RecoilRoot_Jotai,
-  atom: atom_Jotai,
-  atomAsync: atomAsync_Jotai,
-  atomFamily: atomFamily_Jotai,
-  selector: selector_Jotai,
-  selectorDefault: selectorDefault_Jotai,
-  asyncSelector: asyncSelector_Jotai,
-  selectorFamily: selectorFamily_Jotai,
-  asyncSelectorFamily: asyncSelectorFamily_Jotai,
-  useRecoilCallback: useRecoilCallback_Jotai,
-  useRecoilState: useRecoilState_Jotai,
-  useRecoilValue: useRecoilValue_Jotai,
-  useSetRecoilState: useSetRecoilState_Jotai,
-  useResetRecoilState: useResetRecoilState_Jotai,
-  useRecoilBridgeAcrossReactRoots_UNSTABLE:
-    useRecoilBridgeAcrossReactRoots_UNSTABLE_Jotai,
-  waitForAll: waitForAll_Jotai,
-};
+export enum AppIdNames {
+  jotaiRecoilAdapter = "JotaiRecoilAdapter",
+  recoil = "Recoil",
+}
 
 export const libs: StateFactoryArgs = {
   [AppIdNames.recoil]: recoilLib,
   [AppIdNames.jotaiRecoilAdapter]: jotaiRecoilAdapter,
 };
+
+export type RecoilStateFactoryArgs = typeof recoilLib;
+export type JotaiStateFactoryArgs = typeof jotaiRecoilAdapter;
+export interface StateFactoryArgs {
+  [AppIdNames.recoil]: RecoilStateFactoryArgs;
+  [AppIdNames.jotaiRecoilAdapter]: JotaiStateFactoryArgs;
+}
+export interface StateFactoryArgs {
+  [AppIdNames.recoil]: RecoilStateFactoryArgs;
+  [AppIdNames.jotaiRecoilAdapter]: JotaiStateFactoryArgs;
+}

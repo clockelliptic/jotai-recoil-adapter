@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import { useMemo } from "react";
-import { JotaiStateFactoryArgs, StateFactoryArgs } from "../types";
+import { JotaiStateFactoryArgs, StateFactoryArgs } from "../config";
 import { observeRender } from "../../render-observer";
 import { uniqueId } from "lodash";
 import { Todo } from "../data-source/types";
