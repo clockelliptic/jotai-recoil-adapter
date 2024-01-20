@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
-import { DevComponentProps } from "./types";
-import { observeRender } from "../../../__dev__/render-observer";
+import { DevComponentProps } from "src/__dev__/app/components/types";
+import { observeRender } from "src/__dev__/render-observer";
 import { Button, Col, Form, Input, Row } from "antd";
 import { PlusCircleFilled } from "@ant-design/icons";
 import { uniqueId } from "lodash";

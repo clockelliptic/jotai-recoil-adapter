@@ -1,8 +1,8 @@
 import { FunctionComponent, useEffect, useRef, useState } from "react";
-import { DevComponentProps } from "./types";
+import { DevComponentProps } from "src/__dev__/app/components/types";
 import { Button, Tooltip, message } from "antd";
-import { observeRender } from "../../../__dev__/render-observer";
-import { createTodo } from "../state";
+import { observeRender } from "src/__dev__/render-observer";
+import { createTodo } from "src/__dev__/app/state";
 import { MessageInstance } from "antd/es/message/interface";
 
 const createNTodos = 2000;

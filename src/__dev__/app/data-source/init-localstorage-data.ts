@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { Todo, TodoList, UserInfo } from "./types";
+import { Todo, TodoList, UserInfo } from "src/__dev__/app/data-source/types";
 
 export const initializeLocalStorageData = () => {
   // Check and initialize categories

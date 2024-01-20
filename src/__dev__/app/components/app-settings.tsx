@@ -1,8 +1,8 @@
 import { FunctionComponent } from "react";
-import { DevComponentProps } from "./types";
+import { DevComponentProps } from "src/__dev__/app/components/types";
 import { Space, Switch } from "antd";
-import { observeRender } from "../../../__dev__/render-observer";
-import { PerformanceTestButton } from "./perf-demo";
+import { observeRender } from "src/__dev__/render-observer";
+import { PerformanceTestButton } from "src/__dev__/app/components/perf-demo";
 
 export const AppSettings: FunctionComponent<DevComponentProps> = (props) => {
   const { appId, useRecoilState, appThemeColorState } = props;

@@ -1,5 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
-import { Category, Todo, TodoList, UserInfo } from "./types";
+import {
+  Category,
+  Todo,
+  TodoList,
+  UserInfo,
+} from "src/__dev__/app/data-source/types";
 
 // Helper function to get data from localStorage
 export const getData = <T>(key: string, defaultData: T[]): T[] => {

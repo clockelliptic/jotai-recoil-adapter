@@ -12,7 +12,7 @@ import {
   useRecoilBridgeAcrossReactRoots_UNSTABLE as useRecoilBridgeAcrossReactRoots_UNSTABLE_Recoil,
   waitForAll as waitForAll_Recoil,
 } from "recoil";
-import * as jotaiRecoilAdapter from "../..";
+import * as jotaiRecoilAdapter from "src";
 
 const recoilLib = {
   RecoilRoot: RecoilRoot_Recoil,

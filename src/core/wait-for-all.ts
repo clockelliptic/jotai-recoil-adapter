@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { AtomAdapter } from "./types";
+import { AtomAdapter } from "src/core/types";
 
 /**
  * WARNING: Must be wrapped with useMemo or useRef if used inside of render function.

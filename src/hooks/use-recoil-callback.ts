@@ -1,8 +1,8 @@
 import { RESET, useAtomCallback } from "jotai/utils";
 import { Getter, Setter } from "jotai";
 import { useCallback } from "react";
-import { SetterAdapterParams, Snapshot } from "../core/types";
-import { snapshotAdapter } from "./snapshot-adapter";
+import { SetterAdapterParams, Snapshot } from "src/core/types";
+import { snapshotAdapter } from "src/hooks/snapshot-adapter";
 
 export type UseStateCallbackParams = SetterAdapterParams & {
   snapshot: Snapshot;

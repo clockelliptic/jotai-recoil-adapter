@@ -4,7 +4,7 @@ import {
   AtomAdapter,
   AtomAdapterParams,
   AtomAsyncAdapterParams,
-} from "./types";
+} from "src/core/types";
 
 /**
  * Adapter for Recoil's standard primitive `atom`.

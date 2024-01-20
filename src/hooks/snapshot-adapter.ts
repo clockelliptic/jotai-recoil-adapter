@@ -1,5 +1,5 @@
 import { Getter } from "jotai";
-import { AtomAdapter, Loadable, Snapshot } from "../core/types";
+import { AtomAdapter, Loadable, Snapshot } from "src/core/types";
 
 export const snapshotAdapter = (get: Getter): Snapshot => {
   const getLoadable = <T>(atom: AtomAdapter<T>): Loadable<T> => {

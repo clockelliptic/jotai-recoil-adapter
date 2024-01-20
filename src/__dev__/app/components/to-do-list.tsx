@@ -1,10 +1,10 @@
 import { Row, Col, Card, List, Typography, Space } from "antd";
 import { gray } from "@ant-design/colors";
 import { FunctionComponent } from "react";
-import { DevComponentProps } from "./types";
-import { observeRender } from "../../../__dev__/render-observer";
-import { AddTodoForm } from "./to-do-form";
-import { TodoItem } from "./to-do-item";
+import { DevComponentProps } from "src/__dev__/app/components/types";
+import { observeRender } from "src/__dev__/render-observer";
+import { AddTodoForm } from "src/__dev__/app/components/to-do-form";
+import { TodoItem } from "src/__dev__/app/components/to-do-item";
 
 export const TodosContainer: FunctionComponent<DevComponentProps> = (props) => {
   const { appId, useRecoilValue, todosState } = props;

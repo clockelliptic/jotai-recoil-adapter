@@ -1,4 +1,4 @@
-import { DevAppFactory } from "./__dev__/app/app";
+import { DevAppFactory } from "src/__dev__/app/app";
 import ReactDOM from "react-dom/client";
 
 const App = () => {

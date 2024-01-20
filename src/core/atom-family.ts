@@ -10,7 +10,7 @@ import {
   AtomFamilyAsyncAdapterParams,
   GetAtomFamilyAsyncDefaultValue,
   GetAtomFamilyDefaultValue,
-} from "./types";
+} from "src/core/types";
 
 /**
  * Adapter for Recoil's standard primitive `atomFamily`.

@@ -1,9 +1,9 @@
 import { Breadcrumb, ConfigProvider, Layout, Menu, theme } from "antd";
 import { FunctionComponent, PropsWithChildren, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { DevComponentProps } from "./types";
-import { observeRender } from "../../../__dev__/render-observer";
-import { AppSettings } from "./app-settings";
+import { DevComponentProps } from "src/__dev__/app/components/types";
+import { observeRender } from "src/__dev__/render-observer";
+import { AppSettings } from "src/__dev__/app/components/app-settings";
 
 const { darkAlgorithm, defaultAlgorithm, compactAlgorithm } = theme;
 const { Header, Content } = Layout;

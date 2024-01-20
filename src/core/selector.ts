@@ -5,7 +5,7 @@ import {
   AtomAdapter,
   SelectorAdapterParams,
   SelectorDefaultAdapterParams,
-} from "./types";
+} from "src/core/types";
 
 /**
  * Adapter for Recoil's standard synchronous `selector`.

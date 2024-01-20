@@ -1,4 +1,4 @@
-import { AtomAdapter } from "../core/types";
+import { AtomAdapter } from "src/core/types";
 import { useAtom, SetStateAction, useAtomValue } from "jotai";
 import { useSetAtom } from "jotai";
 import { RESET } from "jotai/utils";

@@ -1,21 +1,21 @@
-import { atom, atomAsync } from "./core/atom";
-import { atomFamily, atomFamilyAsync } from "./core/atom-family";
-import { selector, asyncSelector, selectorDefault } from "./core/selector";
+import { atom, atomAsync } from "src/core/atom";
+import { atomFamily, atomFamilyAsync } from "src/core/atom-family";
+import { selector, asyncSelector, selectorDefault } from "src/core/selector";
 import {
   selectorFamily,
   asyncSelectorFamily,
   selectorDefaultFamily,
-} from "./core/selector-family";
-import { waitForAll } from "./core/wait-for-all";
-import { useRecoilCallback } from "./hooks/use-recoil-callback";
+} from "src/core/selector-family";
+import { waitForAll } from "src/core/wait-for-all";
+import { useRecoilCallback } from "src/hooks/use-recoil-callback";
 import {
   useRecoilState,
   useRecoilValue,
   useResetRecoilState,
   useSetRecoilState,
-} from "./hooks/use-recoil-state";
-import { useRecoilBridgeAcrossReactRoots_UNSTABLE } from "./hooks/use-recoil-bridge";
-import { RecoilRoot } from "./core/recoil-root";
+} from "src/hooks/use-recoil-state";
+import { useRecoilBridgeAcrossReactRoots_UNSTABLE } from "src/hooks/use-recoil-bridge";
+import { RecoilRoot } from "src/core/recoil-root";
 
 export {
   RecoilRoot,

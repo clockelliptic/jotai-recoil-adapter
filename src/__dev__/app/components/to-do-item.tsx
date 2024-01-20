@@ -1,9 +1,9 @@
 import { FunctionComponent } from "react";
-import { DevComponentProps } from "./types";
+import { DevComponentProps } from "src/__dev__/app/components/types";
 import { Button, List, Popconfirm, Switch, Tag, Tooltip } from "antd";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import { Todo } from "../data-source/types";
-import { observeRender } from "../../../__dev__/render-observer";
+import { Todo } from "src/__dev__/app/data-source/types";
+import { observeRender } from "src/__dev__/render-observer";
 
 export const TodoItem: FunctionComponent<
   DevComponentProps & { todo: Todo }

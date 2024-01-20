@@ -1,10 +1,13 @@
 /* eslint-disable prefer-const */
 import { useMemo } from "react";
-import { JotaiStateFactoryArgs, StateFactoryArgs } from "../config";
-import { observeRender } from "../../render-observer";
+import {
+  JotaiStateFactoryArgs,
+  StateFactoryArgs,
+} from "src/__dev__/app/config";
+import { observeRender } from "src/__dev__/render-observer";
 import { uniqueId } from "lodash";
-import { Todo } from "../data-source/types";
-import { getTodos } from "../data-source/api";
+import { Todo } from "src/__dev__/app/data-source/types";
+import { getTodos } from "src/__dev__/app/data-source/api";
 
 export const createTodo = () => {
   const id = uniqueId();
