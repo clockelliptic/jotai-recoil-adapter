@@ -1,46 +1,57 @@
-import { atom, Getter, WritableAtom, SetStateAction, Setter } from "jotai";
+import { atom, Getter, SetStateAction, Setter, getDefaultStore } from "jotai";
 import { RESET, atomFamily, unwrap } from "jotai/utils";
 import deepEqual from "fast-deep-equal";
-import { RecoilGetSelectorFamily, RecoilSetSelectorFamily } from "./types";
+import {
+  AsyncSelectorFamilyAdapterParams,
+  AtomAdapter,
+  SelectorDefaultFamilyAdapterParams,
+  SelectorFamilyAdapterParams,
+} from "./types";
 
-export type SelectorFamilyOptions<T, Param> = {
-  key: string;
-  get: RecoilGetSelectorFamily<Param, T>;
-  set?: RecoilSetSelectorFamily<Param, T>;
-};
-
+/**
+ * Adapter for Recoil's standard synchronous `selectorFamily`.
+ *
+ * Note: for async selector families, use `import { asyncSelectorFamily } from 'jotai-recoil-adapter'`
+ */
 export function selectorFamily<T, Param>(
-  options: SelectorFamilyOptions<T, Param>,
+  options: SelectorFamilyAdapterParams<T, Param>,
 ) {
-  const fam = atomFamily<Param, WritableAtom<T, [SetStateAction<T>], unknown>>(
-    (param) => {
-      const read = (get: Getter) => options.get(param)({ get });
-      const write = (get: Getter, set: Setter, newValue: SetStateAction<T>) => {
-        const reset = <Value>(
-          atom: WritableAtom<Value, [SetStateAction<Value>], unknown>,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ) => set(atom, RESET as any);
-        if (options.set) {
-          return options.set?.(param)({ get, set, reset }, newValue);
-        }
-        return;
-      };
-      return atom(read, write);
-    },
-    deepEqual,
-  );
+  const fam = atomFamily<Param, AtomAdapter<T>>((param) => {
+    const read = (get: Getter) => options.get(param)({ get });
+    const write = (get: Getter, set: Setter, newValue: SetStateAction<T>) => {
+      const reset = <Value>(
+        atom: AtomAdapter<Value>,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ) => set(atom, RESET as any);
+      if (options.set) {
+        return options.set?.(param)({ get, set, reset }, newValue);
+      }
+      return;
+    };
+    return atom(read, write);
+  }, deepEqual);
   return fam;
 }
 
-export type AsyncSelectorFamilyOptionss<T, Param, U> = {
-  key: string;
-  get: RecoilGetSelectorFamily<Param, Promise<T>>;
-  set?: RecoilSetSelectorFamily<Param, T | U>;
-  fallback: U;
-};
+const defaultStore = getDefaultStore();
+/**
+ * Special adapter for both synchronous and asynchronous Recoil `selectorFamily` that
+ * are used to initialize Recoil `atomFamily`.
+ *
+ * WARNING: Depends on Jotai's getDefaultStore() method.
+ * Only works in Jotai Providerless mode.
+ */
+export function selectorDefaultFamily<T, Param>(
+  options: SelectorDefaultFamilyAdapterParams<T, Param>,
+): (param: Param) => T {
+  return (param: Param) => options.get(param)({ get: defaultStore.get });
+}
 
+/**
+ * Adapter for Recoil's asynchronous `selectorFamily`.
+ */
 export function asyncSelectorFamily<T, Param, U>(
-  options: AsyncSelectorFamilyOptionss<T, Param, U>,
+  options: AsyncSelectorFamilyAdapterParams<T, Param, U>,
 ) {
   const fam = atomFamily(
     (param) =>
@@ -49,7 +60,7 @@ export function asyncSelectorFamily<T, Param, U>(
           (get: Getter) => options.get(param)({ get }),
           (get: Getter, set: Setter, newValue: SetStateAction<T | U>) => {
             const reset = <Value>(
-              atom: WritableAtom<Value, [SetStateAction<Value>], unknown>,
+              atom: AtomAdapter<Value>,
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ) => set(atom, RESET as any);
             if (options.set) {
