@@ -7,6 +7,8 @@ import deepEqual from "fast-deep-equal";
 import {
   AtomAdapter,
   AtomFamilyAdapterParams,
+  AtomFamilyAsyncAdapterParams,
+  GetAtomFamilyAsyncDefaultValue,
   GetAtomFamilyDefaultValue,
 } from "./types";
 
@@ -60,15 +62,13 @@ export function atomFamily<T, Param>(
  * WARNING: This adapter depends on Jotai's getDefaultStore() method,
  * and therefore only works in Jotai Providerless mode.
  */
-export function atomFamilyAsync<T, Param>(
-  params: AtomFamilyAdapterParams<Promise<T>, Param>,
+export function atomFamilyAsync<T, Param, U>(
+  params: AtomFamilyAsyncAdapterParams<T, Param, U>,
 ) {
   const stateFam = jotaiAtomFamily((param: Param) => {
     const defaultValue =
       typeof params.default === "function"
-        ? (params.default as GetAtomFamilyDefaultValue<Promise<T>, Param>)(
-            param,
-          )
+        ? (params.default as GetAtomFamilyAsyncDefaultValue<T, Param>)(param)
         : params.default;
     return unwrap(jotaiAtom(defaultValue)) as AtomAdapter<T>;
   }, deepEqual);

@@ -34,6 +34,16 @@ export type AtomFamilyAdapterParams<T, Param> = AtomAdapterCommonParams<T> & {
   default: T | GetAtomFamilyDefaultValue<T, Param>;
 };
 
+export type GetAtomFamilyAsyncDefaultValue<T, Param> = (
+  param: Param,
+) => Promise<T>;
+
+export type AtomFamilyAsyncAdapterParams<T, Param, U> = RecoilCommonParams & {
+  default: Promise<T> | GetAtomFamilyAsyncDefaultValue<T, Param>;
+  effects?: "UNSUPPORTED";
+  fallback?: U;
+};
+
 /*********************************
  * Selector Adapter Params
  */
