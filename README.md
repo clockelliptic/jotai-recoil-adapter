@@ -9,11 +9,15 @@
   - [Usage](#usage)
     - [`RecoilRoot`](#recoilroot)
     - [`atom`](#atom)
-    - [Composing Jotai Atoms with `jotai-recoil-adapter`](#composing-jotai-atoms-with-jotai-recoil-adapter)
-    - [`atom` (initialized with an asynchronous selector)](#atom-initialized-with-an-asynchronous-selector)
+    - [`atomAsync`](#atomasync)
     - [`selector`](#selector)
+      - [Composing Jotai Atoms with `jotai-recoil-adapter`](#composing-jotai-atoms-with-jotai-recoil-adapter)
+    - [`selectorDefault`](#selectordefault)
     - [`selector` (asynchronous) as `asyncSelector`](#selector-asynchronous-as-asyncselector)
+    - [`selectorFamily`](#selectorfamily)
+    - [`selectorFamilyDefault`](#selectorfamilydefault)
     - [`atomFamily`](#atomfamily)
+    - [`atomFamilyAsync`](#atomfamilyasync)
     - [`useRecoilState`](#userecoilstate)
     - [`useRecoilValue`](#userecoilvalue)
     - [`useSetRecoilState`](#usesetrecoilstate)
@@ -39,14 +43,26 @@ npm i jotai-recoil-adapter
 The adapter supports the following Recoil features:
 ```ts
 import {
+  // standard Recoil APIs
+  RecoilRoot,
   atom,
-  selector,
   atomFamily,
+  selector,
+  selectorFamily,
+  useRecoilCallback,
   useRecoilState,
   useRecoilValue,
   useSetRecoilState,
   useResetRecoilState,
-  useRecoilCallback,
+  useRecoilBridgeAcrossReactRoots_UNSTABLE,
+  // special adapters for compatibility
+  atomAsync,
+  atomFamilyAsync,
+  asyncSelector,
+  asyncSelectorFamily,
+  selectorDefault,
+  // non-standard adaptations, see Readme
+  waitForAll,
 } from 'jotai-recoil-adapter';
 ```
 
@@ -56,7 +72,15 @@ import {
 
 ### `RecoilRoot`
 
-Wrap your application in a Jotai provider, or use providerless mode.
+Convenience adapter for Recoil's `<RecoilRoot />` component.
+
+This component does nothing. It merely returns a `<React.Fragment />` that wraps child components.
+
+```tsx
+import { RecoilRoot } from 'jotai-recoil-adapter';
+
+const App = () => <RecoilRoot> /* ... */ </RecoilRoot>
+```
 
 ### `atom`
 
@@ -68,71 +92,129 @@ import { atom } from 'jotai-recoil-adapter';
 const textState = atom({
   key: 'textState',
   default: 'Hello',
+  effects: "UNSUPPORTED"
 });
 ```
 
+### `atomAsync`
 
-### Composing Jotai Atoms with `jotai-recoil-adapter`
+Adapter for Recoil `atom` that are initialized with an async selector. To be used with the `selectorDefault` adapter as a default value.
 
-`jotai-recoil-adapter` allows seamless composition of Jotai `atom` and `atomFamily` with its `selector`, `selectorFamily`, and `useRecoilCallback`. This enables complex state management patterns while maintaining a consistent API.
-
-```jsx
-import { atom } from 'jotai';
-import { selector, useRecoilValue } from 'jotai-recoil-adapter';
-
-const baseAtom = atom(0);
-
-const doubledValueSelector = selector({
-  key: 'doubledValue',
-  get: ({ get }) => get(baseAtom) * 2,
-});
-
-function DisplayComponent() {
-  const doubledValue = useRecoilValue(doubledValueSelector);
-
-  return <div>Doubled Value: {doubledValue}</div>;
-}
+```ts
+interface AtomAsyncAdapterParams<T, U> {
+  ...,
+  default: Promise<T>;
+  effects?: "UNSUPPORTED";
+  fallback?: U;
+};
 ```
 
-In this example, a Jotai atom is used with a `selector` from `jotai-recoil-adapter`. This pattern is extendable to other combinations, allowing you to take full advantage of Jotai's capabilities within a Recoil-like API.
-
-### `atom` (initialized with an asynchronous selector)
-
-Atom initialized with an asynchronous selector that composes `fetch` calls and other atom values:
-
 ```jsx
-import { atom, selector } from 'jotai-recoil-adapter';
+import { atom, atomAsync, selectorDefault } from 'jotai-recoil-adapter';
 
 const userIdState = atom({
   key: 'userId',
   default: 1,
 });
 
-const userAtom = atom({
+const userAtom = atomAsync({
   key: 'userAtom',
-  default: selector({
-    key: 'userSelector',
+  default: selectorDefault({
+    key: 'userAtomDefaultValueSelector',
     get: async ({ get }) => {
       const userId = get(userIdState);
       const response = await fetch(`/api/user/${userId}`);
       return response.json();
     },
   }),
+  fallback: /* ... */
 });
 ```
+
+_Why is the API different from Recoil? Jotai's API isn't perfectly compatible with Recoil's. Remember: this adapter exists to help ease the migration from Recoil to Jotai._
+
+**Important:** This adapter is implemented using Jotai's `getDefaultStore` method, therefore this is incompatible with custom Jotai store providers and must only be used in Jotai providerless mode.
 
 ### `selector`
 
 Basic selector usage:
 
 ```jsx
-import { selector } from 'jotai-recoil-adapter';
+import { atom, selector } from 'jotai-recoil-adapter';
 
-const countSelector = selector({
-  key: 'count',
+const countState = atom({
+  key: 'count-state',
+  default: Math.PI
+});
+
+const doubleCountSelector = selector({
+  key: 'double-count',
   get: ({ get }) => get(countState) * 2,
 });
 ```
+
+#### Composing Jotai Atoms with `jotai-recoil-adapter`
+
+`jotai-recoil-adapter` allows seamless composition of Jotai `atom` and `atomFamily` with its `selector`, `selectorFamily`, and `useRecoilCallback`. This enables complex state management patterns while maintaining a consistent API.
+
+In this example, a Jotai `PrimitiveAtom` is used with a `selector` from `jotai-recoil-adapter`. This pattern is extendable to other combinations, allowing you to take full advantage of Jotai's capabilities within a Recoil-like API.
+
+```jsx
+import { atom as jotaiAtom } from 'jotai';
+import { selector, useRecoilValue } from 'jotai-recoil-adapter';
+
+const countState = jotaiAtom(0);
+
+const doubleCountSelector = selector({
+  key: '...',
+  get: ({ get }) => get(countState) * 2,
+});
+```
+
+### `selectorDefault`
+
+Special adapter for both synchronous and asynchronous Recoil `selector` that are used to initialize recoil `atom`.
+
+```jsx
+import {
+  atom,
+  atomFamily,
+  selectorDefault
+} from 'jotai-recoil-adapter';
+
+const idState = atom({
+  key: '...',
+  default: 1,
+});
+
+const itemAtom = atom({
+  key: '...',
+  default: selectorDefault({
+    key: '...',
+    get: ({ get }) => {
+      const id = get(idState);
+      return createItem(id);
+    },
+  }),
+});
+
+const itemStateFamily = atomFamily({
+  key: '...',
+  default: (itemId: string) => `Item ${itemId}`,
+});
+
+const itemStateFamily = atomFamily({
+  key: '...',
+  default: selectorDefault({
+    key: '...',
+    get: ({ get }) => {
+      ...
+    }
+  }),
+});
+```
+
+**Important:** This adapter is implemented using Jotai's `getDefaultStore` method, therefore this is incompatible with custom Jotai store providers and must only be used in Jotai providerless mode.
 
 ### `selector` (asynchronous) as `asyncSelector`
 
@@ -158,7 +240,7 @@ const randomNumberSelector = asyncSelector<number, "Crunching numbers...">({
   fallback: "Crunching numbers..."
 });
 
-const userDataSelector = asynSelector<User, null>({
+const userDataSelector = asyncSelector<User, null>({
   key: 'userData',
   get: async ({ get }) => {
     const response = await fetch('/api/user/data');
@@ -168,18 +250,125 @@ const userDataSelector = asynSelector<User, null>({
 });
 ```
 
+### `selectorFamily`
+
+Atom family for creating a series of atoms based on parameters:
+
+```jsx
+import { selectorFamily } from 'jotai-recoil-adapter';
+
+const itemStateFamily = selectorFamily({
+  key: '...',
+  default: (itemId: string) => ({ get }) => {
+    /* ... */
+  },
+});
+```
+
+### `selectorFamilyDefault`
+
+Special adapter for both synchronous and asynchronous Recoil `selectorFamily` that are used to initialize recoil `atomFamily`.
+
+```jsx
+
+import {
+  atomFamily,
+  selectorDefaultFamily
+} from 'jotai-recoil-adapter';
+
+const itemStateFamily = atomFamily({
+  key: '...',
+  default: selectorDefaultFamily({
+    key: '...',
+    get: (itemId: string) => ({ get }) => {
+      ...
+    }
+  }),
+});
+```
+
+**Important:** This adapter is implemented using Jotai's `getDefaultStore` method, therefore this is incompatible with custom Jotai store providers and must only be used in Jotai providerless mode.
+
 ### `atomFamily`
 
 Atom family for creating a series of atoms based on parameters:
 
 ```jsx
-import { atomFamily } from 'jotai-recoil-adapter';
+import {
+  atomFamily,
+  selectorDefault,
+  selectorDefaultFamily
+} from 'jotai-recoil-adapter';
 
 const itemStateFamily = atomFamily({
-  key: `item/${itemId}`,
+  key: `item-state-family`,
   default: (itemId: string) => `Item ${itemId}`,
 });
+
+const itemStateFamily = atomFamily({
+  key: '...',
+  default: selectorDefault({
+    key: '...',
+    get: ({ get }) => {
+      ...
+    }
+  }),
+});
+
+const itemStateFamily = atomFamily({
+  key: '...',
+  default: selectorDefaultFamily({
+    key: '...',
+    get: (itemId: string) => ({ get }) => {
+      ...
+    }
+  }),
+});
 ```
+
+### `atomFamilyAsync`
+
+Adapter for Recoil `atomFamily` that are initialized with an async selector. To be used with the `selectorDefaultFamily` and `selectorDefault` adapters as a default values:
+
+```ts
+interface AtomFamilyAsyncAdapterParams<T, Param, U> {
+  default: Promise<T>;
+  effects?: "UNSUPPORTED";
+  fallback?: U;
+}
+```
+
+```ts
+import { selectorDefault, selectorDefaultFamily, atomAsync } from 'jotai-recoil-adapter';
+ 
+const fooStateFamily = atomFamilyAsync({
+  key: 'foo-atom-family',
+  default: selectorDefaultFamily({
+     key: 'foo-atom-family-default-value-selector',
+     get: (param) => async ({ get }) => {
+      const data = await fetchData(`v1/api/data/${ param }`);
+      const composedValue = get(someOtherAtom);
+      return doStuffWith(composedValue, data);
+     }
+  }),
+  fallback: /* ... */
+});
+
+const barStateFamily = atomFamilyAsync({
+  key: 'bar-atom-family',
+  default: selectorDefault({
+     key: 'bar-atom-family-default-value-selector',
+     get: async ({ get }) => {
+      const data = await fetchData();
+      const composedValue = get(someOtherAtom);
+      return doStuffWith(composedValue, data);
+     }
+  }),
+  fallback: /* ... */
+});
+```
+
+**Important:** This adapter is implemented using Jotai's `getDefaultStore` method, therefore this is incompatible with custom Jotai store providers and must only be used in Jotai providerless mode.
 
 ### `useRecoilState`
 
