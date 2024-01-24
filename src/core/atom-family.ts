@@ -10,12 +10,22 @@ import {
   AtomFamilyAsyncAdapterParams,
   GetAtomFamilyAsyncDefaultValue,
   GetAtomFamilyDefaultValue,
+  Parameter,
 } from "src/core/types";
+import { registerEffects } from "src/core/atom-effect";
+import { getDefaultStore } from "jotai";
+
+/**
+ * Use defaultStore from Jotai's Providerless mode to mimick
+ * Recoil's API for initializing default atom default values with
+ * async selectors.
+ */
+const defaultStore = getDefaultStore();
 
 /**
  * Adapter for Recoil's standard primitive `atomFamily`.
  */
-export function atomFamily<T, Param>(
+export function atomFamily<T, Param extends Parameter>(
   params: AtomFamilyAdapterParams<T, Param>,
 ) {
   const stateFam = jotaiAtomFamily((param: Param) => {
@@ -23,7 +33,12 @@ export function atomFamily<T, Param>(
       typeof params.default === "function"
         ? (params.default as GetAtomFamilyDefaultValue<T, Param>)(param)
         : params.default;
-    return jotaiAtom(defaultValue) as AtomAdapter<T>;
+    const baseAtom = jotaiAtom(defaultValue) as AtomAdapter<T>;
+    if (params.effects) {
+      const effects = params.effects(param);
+      registerEffects(baseAtom, effects, defaultValue);
+    }
+    return baseAtom;
   }, deepEqual);
   return stateFam;
 }
@@ -62,15 +77,27 @@ export function atomFamily<T, Param>(
  * WARNING: This adapter depends on Jotai's getDefaultStore() method,
  * and therefore only works in Jotai Providerless mode.
  */
-export function atomFamilyAsync<T, Param, U>(
+export function atomFamilyAsync<T, Param extends Parameter, U>(
   params: AtomFamilyAsyncAdapterParams<T, Param, U>,
 ) {
   const stateFam = jotaiAtomFamily((param: Param) => {
-    const defaultValue =
+    const defaultValuePromise =
       typeof params.default === "function"
-        ? (params.default as GetAtomFamilyAsyncDefaultValue<T, Param>)(param)
+        ? (params.default as GetAtomFamilyAsyncDefaultValue<T | U, Param>)(
+            param,
+          )
         : params.default;
-    return unwrap(jotaiAtom(defaultValue)) as AtomAdapter<T>;
+    const baseAtom = unwrap(jotaiAtom(defaultValuePromise)) as AtomAdapter<
+      T | U
+    >;
+    defaultValuePromise.then((value) => {
+      defaultStore.set(baseAtom, value);
+    });
+    if (params.effects) {
+      const effects = params.effects(param);
+      registerEffects(baseAtom, effects, params.fallback);
+    }
+    return baseAtom;
   }, deepEqual);
   return stateFam;
 }

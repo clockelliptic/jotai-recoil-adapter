@@ -78,6 +78,13 @@ export const useAtomicStateFactory = <LibName extends keyof StateFactoryArgs>(
         get: async () => await getTodos(),
       }),
       fallback: [] as Todo[],
+      effects: [
+        ({ onSet }) => {
+          onSet((newVal) => {
+            console.log("atomAsync effect", newVal);
+          });
+        },
+      ],
     });
 
     const todosState_ = atomFamilyAsync({

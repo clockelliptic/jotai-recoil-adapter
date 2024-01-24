@@ -1,8 +1,9 @@
 import { Getter } from "jotai";
 import { AtomAdapter, Loadable, Snapshot } from "src/core/types";
 
-export const snapshotAdapter = (get: Getter): Snapshot => {
-  const getLoadable = <T>(atom: AtomAdapter<T>): Loadable<T> => {
+export const getLoadable_factory =
+  (get: Getter) =>
+  <T>(atom: AtomAdapter<T>): Loadable<T> => {
     try {
       // Attempt to get the atom's value synchronously
       const value = get(atom);
@@ -17,12 +18,14 @@ export const snapshotAdapter = (get: Getter): Snapshot => {
       }
     }
   };
+
+export const snapshotAdapter = (get: Getter): Snapshot => {
   return {
     getPromise: async (atom) => get(atom),
     retain: () => () => {
       // Shim
       return;
     },
-    getLoadable,
+    getLoadable: getLoadable_factory(get),
   };
 };

@@ -5,15 +5,26 @@ import {
   AtomAdapterParams,
   AtomAsyncAdapterParams,
 } from "src/core/types";
+import { registerEffects } from "src/core/atom-effect";
+
+/**
+ * Use defaultStore from Jotai's Providerless mode to mimick
+ * Recoil's API for initializing default atom default values with
+ * async selectors.
+ */
+const defaultStore = getDefaultStore();
 
 /**
  * Adapter for Recoil's standard primitive `atom`.
  */
 export function atom<T>(params: AtomAdapterParams<T>): AtomAdapter<T> {
-  return jotaiAtom(params.default) as AtomAdapter<T>;
+  const baseAtom = jotaiAtom(params.default) as AtomAdapter<T>;
+  if (params.effects) {
+    registerEffects(baseAtom, params.effects, params.default);
+  }
+  return baseAtom;
 }
 
-const defaultStore = getDefaultStore();
 /**
  * Adapter for Recoil `atom` that are initialized with an async selector.
  * To be used with the `selectorDefault` adapter as a default value:
@@ -35,13 +46,16 @@ const defaultStore = getDefaultStore();
  * WARNING: This adapter depends on Jotai's getDefaultStore() method,
  * and therefore only works in Jotai Providerless mode.
  */
-export function atomAsync<T, U>({
-  default: defaultValuePromise,
-  fallback,
-}: AtomAsyncAdapterParams<T, U>): AtomAdapter<T | U> {
+export function atomAsync<T, U>(
+  params: AtomAsyncAdapterParams<T, U>,
+): AtomAdapter<T | U> {
+  const { default: defaultValuePromise, fallback } = params;
   const baseAtom = jotaiAtom(fallback) as AtomAdapter<T | U>;
   defaultValuePromise.then((value) => {
     defaultStore.set(baseAtom, value);
   });
+  if (params.effects) {
+    registerEffects(baseAtom, params.effects, params.fallback);
+  }
   return baseAtom;
 }

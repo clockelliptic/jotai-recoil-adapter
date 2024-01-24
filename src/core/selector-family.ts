@@ -4,6 +4,7 @@ import deepEqual from "fast-deep-equal";
 import {
   AsyncSelectorFamilyAdapterParams,
   AtomAdapter,
+  Parameter,
   SelectorDefaultFamilyAdapterParams,
   SelectorFamilyAdapterParams,
 } from "src/core/types";
@@ -13,7 +14,7 @@ import {
  *
  * Note: for async selector families, use `import { asyncSelectorFamily } from 'jotai-recoil-adapter'`
  */
-export function selectorFamily<T, Param>(
+export function selectorFamily<T, Param extends Parameter>(
   options: SelectorFamilyAdapterParams<T, Param>,
 ) {
   const fam = atomFamily<Param, AtomAdapter<T>>((param) => {
@@ -41,7 +42,7 @@ const defaultStore = getDefaultStore();
  * WARNING: Depends on Jotai's getDefaultStore() method.
  * Only works in Jotai Providerless mode.
  */
-export function selectorDefaultFamily<T, Param>(
+export function selectorDefaultFamily<T, Param extends Parameter>(
   options: SelectorDefaultFamilyAdapterParams<T, Param>,
 ): (param: Param) => T {
   return (param: Param) => options.get(param)({ get: defaultStore.get });
@@ -50,7 +51,7 @@ export function selectorDefaultFamily<T, Param>(
 /**
  * Adapter for Recoil's asynchronous `selectorFamily`.
  */
-export function asyncSelectorFamily<T, Param, U>(
+export function asyncSelectorFamily<T, Param extends Parameter, U>(
   options: AsyncSelectorFamilyAdapterParams<T, Param, U>,
 ) {
   const fam = atomFamily(
