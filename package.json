@@ -12,7 +12,12 @@
   "keywords": [
     "jotai",
     "recoil",
-    "react"
+    "plugin",
+    "react",
+    "state",
+    "manager",
+    "management",
+    "store"
   ],
   "repository": "https://github.com/clockelliptic/jotai-recoil-adapter.git",
   "scripts": {
