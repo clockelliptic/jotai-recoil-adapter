@@ -81,7 +81,12 @@ export const useAtomicStateFactory = <LibName extends keyof StateFactoryArgs>(
       effects: [
         ({ onSet }) => {
           onSet((newVal) => {
-            console.log("atomAsync effect", newVal);
+            console.log("todoState effect - 1", { newVal });
+          });
+        },
+        ({ onSet }) => {
+          onSet((newVal) => {
+            console.log("todoState effect - 2", { newVal });
           });
         },
       ],
@@ -96,6 +101,18 @@ export const useAtomicStateFactory = <LibName extends keyof StateFactoryArgs>(
           return await getTodos();
         },
       }),
+      effects: (param: string) => [
+        ({ onSet }) => {
+          onSet((newVal) => {
+            console.log("todoStateFamily_ effect - 1", { param, newVal });
+          });
+        },
+        ({ onSet }) => {
+          onSet((newVal) => {
+            console.log("todoStateFamily_ effect - 2", { param, newVal });
+          });
+        },
+      ],
       fallback: [] as Todo[],
     });
 
@@ -105,6 +122,18 @@ export const useAtomicStateFactory = <LibName extends keyof StateFactoryArgs>(
         key: uniqueId() + "__intialTodosSelector__",
         get: async () => await getTodos(),
       }),
+      effects: (param: string) => [
+        ({ onSet }) => {
+          onSet((newVal) => {
+            console.log("todoStateFamily___ effect - 1", { param, newVal });
+          });
+        },
+        ({ onSet }) => {
+          onSet((newVal) => {
+            console.log("todoStateFamily___ effect - 2", { param, newVal });
+          });
+        },
+      ],
       fallback: [] as Todo[],
     });
 

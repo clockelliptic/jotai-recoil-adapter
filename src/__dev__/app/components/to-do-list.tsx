@@ -7,10 +7,17 @@ import { AddTodoForm } from "src/__dev__/app/components/to-do-form";
 import { TodoItem } from "src/__dev__/app/components/to-do-item";
 
 export const TodosContainer: FunctionComponent<DevComponentProps> = (props) => {
-  const { appId, useRecoilValue, todosState } = props;
+  const { appId, useRecoilValue, todosState, todosState_, todosState__ } =
+    props;
   observeRender("TodosContainer", appId);
   const todos = useRecoilValue(todosState);
-
+  const foo1_ = useRecoilValue(todosState_("foo1_"));
+  const foo2_ = useRecoilValue(todosState_("foo2_"));
+  const foo1___ = useRecoilValue(todosState__("foo1___"));
+  const foo2___ = useRecoilValue(todosState__("foo2___"));
+  if ("".length) {
+    console.log(foo1_, foo2_, foo1___, foo2___);
+  }
   return (
     <Row
       justify="center"
