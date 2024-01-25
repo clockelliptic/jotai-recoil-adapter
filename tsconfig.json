@@ -4,6 +4,7 @@
     "paths": {
       "src/*": ["./src/*"],
     },
+    "declaration": true,
     "rootDir": "./src",
     "target": "ESNext",
     "module": "ESNext",
